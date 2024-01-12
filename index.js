@@ -2,7 +2,7 @@
 // pass: $94gasA$$!32Vm2
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 require('dotenv').config()
@@ -41,17 +41,38 @@ async function run() {
         // getting task collection 
         app.get('/task-collection', async (req, res) => {
             const result = await taskCollection.find().toArray();
-            console.log(result);
+            // console.log(result);
             res.send(result)
           })
 
         // posting task collection 
         app.post('/task-collection', async (req, res) => {
             const taskData = req.body;
-            console.log(taskData);
+            // console.log(taskData);
             const result = await taskCollection.insertOne(taskData)
             res.send(result)
         })
+        //update time
+        app.put('/update-time/:id',async(req,res)=>{
+            const taskID = req.params.id;
+            // console.log(taskID);
+            const time = req.body;
+            // console.log("tt",time?.seconds);
+            const filter = { _id: new ObjectId(taskID) };
+            const options = { upsert: true };
+            const updateUserRole = {
+              $set: {
+                timer: time?.seconds
+              }
+            }
+            const result = await taskCollection.updateOne(filter, updateUserRole, options)
+            res.send(result);
+          })
+
+
+
+
+
 
 
 
