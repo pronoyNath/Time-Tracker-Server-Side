@@ -41,9 +41,9 @@ async function run() {
         // getting task collection 
         app.get('/task-collection/:email', async (req, res) => {
             const userEmail = req.params.email;
-            console.log(userEmail);
-            
-            const result = await taskCollection.find({userEmail: userEmail}).toArray();
+            // console.log(userEmail);
+
+            const result = await taskCollection.find({ userEmail: userEmail }).toArray();
             // console.log(result);
             res.send(result)
         })
@@ -71,7 +71,36 @@ async function run() {
             const result = await taskCollection.updateOne(filter, updateUserRole, options)
             res.send(result);
         })
-        
+
+        // update task 
+        app.put('/project-update/:id', async (req, res) => {
+            const id = req.params.id;
+            const body = req.body;
+            // console.log(id, body);
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updateAvailable = {
+                $set: {
+
+                    projectName :body?.projectName,
+                    taskTitle: body?.taskTitle,
+                    description: body?.description,
+                    userEmail: body?.userEmail
+
+                }
+            }
+            const result = await taskCollection.updateOne(filter, updateAvailable, options)
+console.log(result);
+            res.send(result);
+        })
+
+        // delete task 
+        app.delete('/project-delete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await taskCollection.deleteOne(query);
+            res.send(result);
+        })
 
 
 
