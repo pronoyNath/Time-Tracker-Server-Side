@@ -39,11 +39,14 @@ async function run() {
         const taskCollection = database.collection("taskCollection")
 
         // getting task collection 
-        app.get('/task-collection', async (req, res) => {
-            const result = await taskCollection.find().toArray();
+        app.get('/task-collection/:email', async (req, res) => {
+            const userEmail = req.params.email;
+            console.log(userEmail);
+            
+            const result = await taskCollection.find({userEmail: userEmail}).toArray();
             // console.log(result);
             res.send(result)
-          })
+        })
 
         // posting task collection 
         app.post('/task-collection', async (req, res) => {
@@ -53,7 +56,7 @@ async function run() {
             res.send(result)
         })
         //update time
-        app.put('/update-time/:id',async(req,res)=>{
+        app.put('/update-time/:id', async (req, res) => {
             const taskID = req.params.id;
             // console.log(taskID);
             const time = req.body;
@@ -61,14 +64,14 @@ async function run() {
             const filter = { _id: new ObjectId(taskID) };
             const options = { upsert: true };
             const updateUserRole = {
-              $set: {
-                timer: time?.seconds
-              }
+                $set: {
+                    timer: time?.seconds
+                }
             }
             const result = await taskCollection.updateOne(filter, updateUserRole, options)
             res.send(result);
-          })
-
+        })
+        
 
 
 
