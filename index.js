@@ -14,6 +14,7 @@ app.use(cors({
         'http://localhost:5174',
         // "https://task-management-c3da2.web.app",
         // "https://task-management-c3da2.firebaseapp.com"
+        "https://time-traking-000.netlify.app"
     ],
     credentials: true
 }));
